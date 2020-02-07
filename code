@@ -1,0 +1,189 @@
+
+#define ldr A0
+int A = 0;
+const int red = 5;
+const int green = 4;
+const int blue = 0;
+const int anode = 16;
+float R = 0;
+float G = 0;
+float B = 0;
+float W = 0;
+
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(red, OUTPUT);
+  pinMode(blue, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(anode, OUTPUT);
+
+}
+
+void loop()
+{
+
+
+  digitalWrite(red, LOW);
+  digitalWrite(blue, HIGH);
+  digitalWrite(green, HIGH);
+  digitalWrite(anode, HIGH);
+  int Red = analogRead(ldr);
+
+  delay(500);
+
+  digitalWrite(anode, LOW);
+
+  delay(500);
+
+
+  digitalWrite(blue, HIGH);
+  digitalWrite(red, HIGH);
+  digitalWrite(green, LOW);
+  digitalWrite(anode, HIGH);
+  int Green = analogRead(ldr);
+
+  delay(500);
+
+  digitalWrite(anode, LOW);
+
+  delay(500);
+
+  digitalWrite(green, HIGH);
+  digitalWrite(blue, LOW);
+  digitalWrite(red, HIGH);
+  digitalWrite(anode, HIGH);
+  int Blue = analogRead(ldr);
+
+  delay(500);
+
+  digitalWrite(anode, LOW);
+
+  delay(500);
+
+
+  if (( Red > Green) && (Red > Blue))
+  {
+    R++;
+  }
+  else if ((( Red > Green) || (Red > Blue)) && ! (( Red > Green) && (Red > Blue)))
+  {
+    R = R + 0.5;
+  }
+  else if (( Green > Red) && (Green > Blue))
+  {
+    G++;
+  }
+  else if ((( Green > Red) || (Green > Blue)) && ! (( Green > Red) && (Green > Blue)))
+
+  {
+    G = G + 0.5;
+  }
+  else if (( Blue > Green) && (Blue > Red))
+  {
+    B++;
+  }
+
+  else if ((( Blue > Green) || (Blue > Red)) && ! (( Blue > Green) && (Blue > Red)))
+  {
+    B = B + 0.5;
+  }
+
+  else if ( Red = Blue = Green )
+  {
+    R++;
+    B++;
+    G++;
+  }
+
+  Serial.print("R =");
+  Serial.println(R);
+  Serial.print("G =");
+  Serial.println(G);
+  Serial.print("B =");
+  Serial.println(B);
+
+  W = R + G + B;
+
+  Serial.println(W);
+
+
+  if (W == 12 || W == 12.5)
+  {
+
+    if (B > 6 && R < 3 && G < 3)
+    {
+      Serial.println("colour = Blue");
+    }
+
+    else if (G > 6 && R < 3 && B < 3)
+    {
+      Serial.println("colour = Green");
+    }
+
+    else if (R > 6 && G < 3 && B < 3)
+    {
+      Serial.println("colour = Red");
+    }
+    else if ( (2 * R >= G || 2 * G >= R) && B <= 2 && R <= 6 && G <= 6 )
+    {
+      Serial.println("colour = Yellow");
+
+    }
+
+
+    else if ( (2 * R >= G || 2 * G >= R) && B <= 2 && R > 6 && R <= 9.5 && G <= 6 )
+    {
+
+      Serial.println("colour = Orange");
+    }
+    else if ( (2 * G >= B || 2 * B >= G) && R <= 2 && G <= 6 && B <= 6 )
+    {
+      Serial.println("colour = Cyan");
+    }
+    else if ( (2 * R >= B || 2 * B >= R) && G <= 2 && R <= 6 && B <= 6 )
+    {
+      Serial.println("colour = Magenta");
+
+
+    }
+    else if ( (2 * R >= B || 2 * B >= R) && G <= 2 && R > 6 && R <= 6 && B <= 9.5 )
+
+    {
+      Serial.println("colour = Violet");
+    }
+    else if ((R - 1 <= B || B - 1 <= R) && (R - 1 <= G || G - 1 <= R) && (B - 1 <= G || G - 1 <= B) && R > 3 && G > 3 && B > 3)
+    {
+      int B = analogRead(ldr);
+
+      if (ldr <= 13)
+      {
+        Serial.println("colour = Black");
+      }
+      else
+      {
+        Serial.println("colour = White");
+      }
+
+
+    }
+  }
+
+
+
+
+
+  else if (W > 12)
+  {
+    W = 0;
+    R = 0;
+    G = 0;
+    B = 0;
+  }
+
+  else if (W < 12)
+  {
+    Serial.println("wait");
+  }
+}
